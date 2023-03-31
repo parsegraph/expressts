@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist/docs",
+    "noImplicitAny": true,
+    "module": "es2015",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap":true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": [
+    "src/demo.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
