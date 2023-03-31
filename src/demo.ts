@@ -3,8 +3,8 @@ import app from "./server";
 
 const getPort = (port: number) => {
   try {
-    if (statSync("../demo.port")) {
-      port = parseInt(readFileSync("../demo.port"));
+    if (statSync("./demo.port")) {
+      port = parseInt(readFileSync("./demo.port"));
     }
   } catch (ex) {
     console.log(ex);
