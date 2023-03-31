@@ -1,6 +1,6 @@
 #!/bin/bash
 while true; do
-    make autotest
+    yarn build:test && yarn test
     sleep 0.2
     make wait
 done

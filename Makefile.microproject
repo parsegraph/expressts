@@ -1,12 +1,12 @@
-DEST_LIB = dist/parsegraph-$(DIST_NAME).lib.js
-PROD_LIB = dist-prod/parsegraph-$(DIST_NAME).lib.js
+DEST_LIB = dist/$(DIST_NAME).lib.js
+PROD_LIB = dist-prod/$(DIST_NAME).lib.js
 
 CLEAN_FILES = \
 	dist \
 	dist-types \
 	dist-prod \
-	parsegraph-$(DIST_NAME)-dev.tgz \
-	parsegraph-$(DIST_NAME)-prod.tgz
+	$(DIST_NAME)-dev.tgz \
+	$(DIST_NAME)-prod.tgz
 
 CONFIG_FILES = \
 	Makefile \
@@ -27,25 +27,11 @@ show-runs:
 .PHONY: show-runs
 
 show-npm:
-	xdg-open https://npmjs.com/parsegraph-$(DIST_NAME)
+	xdg-open https://npmjs.com/$(DIST_NAME)
 .PHONY: show-npm
 
-build: $(DEST_LIB)
-.PHONY: build
-
-autobuild:
-	npx webpack --watch --config webpack.config.js
-.PHONY: autobuild
-
-install-deps:
-	./install-deps.sh
-.PHONY: install-deps
-
-build-prod: $(PROD_LIB)
-.PHONY: build-prod
-
 demo:
-	SITE_PORT=$(DEMO_PORT) cd demo && yarn build && yarn start
+	SITE_PORT=$(DEMO_PORT) yarn build && yarn start
 .PHONY: demo
 
 tmux:
@@ -56,25 +42,23 @@ stop-tmux:
 	tmuxify stop
 .PHONY: stop-tmux
 
-RUN_TEST=npx jest --env=jsdom --no-cache
-
 check:
-	$(RUN_TEST)
+	yarn test
 .PHONY: check
 
 test: check
 .PHONY: test
 
 autotest:
-	$(RUN_TEST) --watch
+	yarn test:watch
 .PHONY: autotest
 
 coverage:
-	$(RUN_TEST) --coverage --coverageDirectory=dist/coverage --coveragePathIgnorePatterns=demo
+	yarn coverage
 .PHONY: coverage
 
 prettier:
-	npx prettier --write src test demo
+	npx prettier --write src
 .PHONY: prettier
 
 lint:
@@ -86,22 +70,16 @@ doc:
 .PHONY: doc
 
 build-container:
-	podman build . -t parsegraph-$(DIST_NAME)
+	podman build . -t $(DIST_NAME)
 .PHONY: build-container
 
 run-container: build-container stop-container
-	podman run -e SITE_ROOT=$(DEMO_ROOT) -w /usr/src/ --name parsegraph-$(DIST_NAME) -it -p$(DEMO_PORT):3000 localhost/parsegraph-$(DIST_NAME):latest make demo
+	podman run -e SITE_ROOT=$(DEMO_ROOT) -w /usr/src/ --name $(DIST_NAME) -it -p$(DEMO_PORT):3000 localhost/$(DIST_NAME):latest make demo
 .PHONY: run-container
 
 stop-container:
-	podman stop parsegraph-$(DIST_NAME); podman rm parsegraph-$(DIST_NAME); true
+	podman stop $(DIST_NAME); podman rm $(DIST_NAME); true
 .PHONY: stop-container
-
-tar: parsegraph-$(DIST_NAME)-dev.tgz
-.PHONY: tar
-
-tar-prod: parsegraph-$(DIST_NAME)-prod.tgz
-.PHONY: tar
 
 wait:
 	./wait.sh $(CONFIG_FILES) $(SCRIPT_FILES) $(EXTRA_SCRIPTS)
@@ -116,15 +94,28 @@ EXTRA_FILES = \
 	README.md \
 	package.json
 
+BUILD=$(DIST_NAME)
+
+build: $(DEST_LIB)
+.PHONY: build
+
 $(DEST_LIB): $(EXTRA_FILES) $(SCRIPT_FILES) $(EXTRA_SCRIPTS)
 	npx webpack --config webpack.config.js
+
+autobuild:
+	npx webpack --watch --config webpack.config.js
+.PHONY: autobuild
+
+build-prod: $(PROD_LIB)
+.PHONY: build-prod
 
 $(PROD_LIB): $(EXTRA_FILES) $(SCRIPT_FILES) $(EXTRA_SCRIPTS)
 	NODE_ENV=production npx webpack --config webpack.prod.js
 
-BUILD=parsegraph-$(DIST_NAME)
+tar: $(DIST_NAME)-dev.tgz
+.PHONY: tar
 
-parsegraph-$(DIST_NAME)-dev.tgz: $(DEST_LIB)
+$(DIST_NAME)-dev.tgz: $(DEST_LIB)
 	mkdir $(BUILD)
 	cp -r -t $(BUILD) $(EXTRA_FILES) dist/
 	rm -rf $(BUILD)/dist/coverage
@@ -133,7 +124,10 @@ parsegraph-$(DIST_NAME)-dev.tgz: $(DEST_LIB)
 	tar cvzf $@ $(BUILD)/
 	rm -rf $(BUILD)
 
-parsegraph-$(DIST_NAME)-prod.tgz: $(PROD_LIB)
+tar-prod: $(DIST_NAME)-prod.tgz
+.PHONY: tar
+
+$(DIST_NAME)-prod.tgz: $(PROD_LIB)
 	mkdir $(BUILD)
 	cp -r -t $(BUILD) $(EXTRA_FILES)
 	cp -r dist-prod/ $(BUILD)/dist
