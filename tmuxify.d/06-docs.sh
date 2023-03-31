@@ -1,6 +1,6 @@
 #!/bin/bash
 while true; do
-    make doc
+    make docs
     sleep 0.2
     make wait
 done

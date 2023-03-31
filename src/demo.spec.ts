@@ -1,5 +1,5 @@
 import expect from "expect";
-import app from './server';
+import app from "./server";
 
 describe("expressts", () => {
   it("can create a router", () => {
@@ -9,6 +9,6 @@ describe("expressts", () => {
     expect(app("")).toBeTruthy();
   });
   it("needs a root path", () => {
-    expect(()=>app(null)).toThrow();
+    expect(() => app(null)).toThrow();
   });
 });

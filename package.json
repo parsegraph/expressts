@@ -9,7 +9,6 @@
     "test": "npx jest ./dist/src/test.js",
     "test:watch": "npx jest ./dist/src/test.js --watch",
     "coverage": "npx jest ./dist/src/test.js --coverage --coverageDirectory=dist/coverage --coveragePathIgnorePatterns=demo",
-    "doc": "npx typedoc --tsconfig tsconfig.browser.json src/demo.ts --out ./dist/docs",
     "start": "node ./dist/src/demo.js"
   },
   "repository": {

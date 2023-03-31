@@ -62,12 +62,12 @@ prettier:
 .PHONY: prettier
 
 lint:
-	npx eslint --fix $(SCRIPT_FILES)
+	npx eslint --fix $(SCRIPT_FILES) $(EXTRA_SCRIPTS)
 .PHONY: lint
 
-doc:
-	yarn doc
-.PHONY: doc
+docs:
+	npx typedoc --tsconfig tsconfig.browser.json $(SCRIPT_FILES) --out ./dist/docs
+.PHONY: docs
 
 build-container:
 	podman build . -t $(DIST_NAME)
