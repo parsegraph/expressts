@@ -1,4 +1,4 @@
-DEST_LIB = dist/$(DIST_NAME).lib.js
+DEST_LIB = dist/src/demo.js
 PROD_LIB = dist-prod/$(DIST_NAME).lib.js
 
 CLEAN_FILES = \
@@ -66,7 +66,7 @@ lint:
 .PHONY: lint
 
 doc:
-	npx typedoc --tsconfig tsconfig.browser.json src/index.ts --out ./dist/docs
+	yarn doc
 .PHONY: doc
 
 build-container:
@@ -100,10 +100,10 @@ build: $(DEST_LIB)
 .PHONY: build
 
 $(DEST_LIB): $(EXTRA_FILES) $(SCRIPT_FILES) $(EXTRA_SCRIPTS)
-	npx webpack --config webpack.config.js
+	yarn build
 
 autobuild:
-	npx webpack --watch --config webpack.config.js
+	yarn build:watch
 .PHONY: autobuild
 
 build-prod: $(PROD_LIB)
