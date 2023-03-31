@@ -25,6 +25,10 @@
     "@types/express": "^4.17.16",
     "@types/node": "^18.11.18",
     "esbuild": "^0.17.5",
-    "jest-environment-jsdom": "^29.5.0"
+    "eslint": "^8.37.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "prettier": "^2.8.7",
+    "typedoc": "^0.23.28"
   }
 }
