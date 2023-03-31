@@ -8,7 +8,7 @@ const DIST_NAME = "expressts";
 const getPort = (port: number) => {
   try {
     if (statSync("../demo.port")) {
-        port = parseInt(readFileSync("../demo.port"));
+      port = parseInt(readFileSync("../demo.port"));
     }
   } catch (ex) {
     console.log(ex);
